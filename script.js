@@ -72,31 +72,55 @@ const getElementOrClosest = target => {
   const playlist = 'playlist__card';
   const track = 'track__card';
 
-  if(target.classList.contains(track || playlist || genre)) return target;
+  if (target.classList.contains(track || playlist || genre)) return target;
 
-  return target.closest(`.${track}`)  || target.closest(`.${playlist}`) || target.closest(`.${genre}`);
+  return target.closest(`.${track}`) || target.closest(`.${playlist}`) || target.closest(`.${genre}`);
+}
+
+const removePlaylists = () => {
+  const playlistEl = document.querySelector('.playlist')
+  const playlists = [...playlistEl.children]
+  playlists.forEach((playlist) => {
+    playlist.remove()
+  })
+}
+
+const removeTracks = () => {
+  const tracksEl = document.querySelector('.track')
+  const tracks = [...tracksEl.children]
+  tracks.forEach((track) => {
+    track.remove()
+  })
 }
 
 const getHandleItem = ({ target }) => {
   const card = getElementOrClosest(target);
 
+
   const nameClass = card.className.split(' ');
   const previousSelect = document.querySelector(`.${nameClass[0]}.item-selected`);
-  
-  if(previousSelect){
+
+  if (previousSelect) {
     previousSelect.classList.remove('item-selected');
   }
 
   card.classList.add('item-selected');
 
-  if (nameClass.includes('genre__card')) getPlaylist(card.id);
-  if (nameClass.includes('playlist__card')) getTrack(card.id);
+  if (nameClass.includes('genre__card')) {
+    removePlaylists()
+    removeTracks()
+    getPlaylist(card.id);
+  }
+  if (nameClass.includes('playlist__card')) {
+    removeTracks()
+    getTrack(card.id);
+  }
   if (nameClass.includes('track__card')) {
     const player = document.querySelector('#player') ? document.querySelector('#player') : createPlayer();
 
     const source = player.querySelector('source');
     source.src = card.name;
-  
+
     player.load();
   };
 }
@@ -117,21 +141,21 @@ const renderIMG = (item) => {
 
 const renderDOM = (nameClassDad, nameClass, items) => {
   const section = document.querySelector(`.${nameClassDad}`)
-  
+
   items.forEach((item) => {
     const div = document.createElement('div');
-    
+
     const p = document.createElement('p');
-  
+
     div.className = nameClass;
     div.id = item.id || item.track.id;
     div.name = item.name || item.track.preview_url;
-    
+
     p.innerText = item.name || item.track.name;
-    
-    if(nameClass !== 'track__card') {
-    const img = renderIMG(item);
-    div.appendChild(img);
+
+    if (nameClass !== 'track__card') {
+      const img = renderIMG(item);
+      div.appendChild(img);
     };
 
     div.appendChild(p);
@@ -143,7 +167,7 @@ const renderDOM = (nameClassDad, nameClass, items) => {
 
 const getAllGenres = async () => {
   const headers = getHeader();
-  const response = await fetch(`${BASE_URL}/browse/categories?locale=pt-BR`,{
+  const response = await fetch(`${BASE_URL}/browse/categories?locale=pt-BR`, {
     headers,
   })
   const data = await response.json();

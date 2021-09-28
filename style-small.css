@@ -56,6 +56,11 @@ footer {
   width: 200px;
 }
 
+.step {
+  height: 250px;
+}
+
+
 .genre, .playlist {
   align-items: center;
   display: flex;
@@ -78,6 +83,11 @@ footer {
   background-color: var(--cinza3);
   margin-left: 1rem;
 }
+
+.item-selected {
+  background-color: var(--cinza1);
+}
+
 
 .genre::-webkit-scrollbar, .playlist::-webkit-scrollbar {
   display: none;
@@ -112,5 +122,6 @@ footer {
   outline: none;
   border-radius: 35px;
 }
+
 
 /* https://prod.liveshare.vsengsaas.visualstudio.com/join?C85ADF95AE7DBB1704D56A57EDC2C8792B8C */
